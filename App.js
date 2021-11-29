@@ -1,134 +1,6 @@
 import * as React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-// Basic reusable components
-
-const Avatar = (props) => (
-  <Image
-    style={styles.avatar}
-    source={{ uri: props.url }}
-  />
-);
-
-const Heading = (props) => (
-  <Text style={styles.heading}>
-    {props.children}
-  </Text>
-);
-
-const Title = (props) => (
-  <Text style={styles.title}>
-    {props.children}
-  </Text>
-);
-
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 50,
-    height: 75,
-    width: 75
-  },
-  heading: {
-    fontWeight: 'bold',
-    fontSize: 24,
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
-
-// App-specific components
-
-const WoofCard = (props) => (
-  <View style={woofCardStyles.card}>
-    <Avatar url={props.avatar}/>
-    <Title style={woofCardStyles.name}>
-      {props.name}
-    </Title>
-  </View>
-);
-
-const woofCardStyles = StyleSheet.create({
-  card: {
-    height: 120,
-    borderWidth: 2,
-    borderColor: 'blue',
-    borderRadius: 20,
-    alignSelf: 'center',
-    padding: 8,
-    margin: 8,
-    textAlign: 'center',
-    justifyContent: 'space-between',
-    textTransform: 'uppercase',
-  },
-});
-
-const WoofPost = (props) => (
-  <View style={woofPostStyles.layout}>
-    <Image 
-      style={woofPostStyles.image} 
-      source={{ uri: props.image }} />
-    <View style={woofPostStyles.content} >
-      <Text style={woofPostStyles.title} >
-        {props.title}
-      </Text>
-      <Text style={woofPostStyles.description} >
-        {props.description}
-      </Text>
-    </View>
-  </View>
-);
-
-const woofPostStyles = StyleSheet.create({
-  layout: {
-    padding: 8,
-    flexDirection: 'row',
-  },
-  image: {
-    borderRadius: 10,
-    flex: 1,
-    marginRight: 16,
-  },
-  content: {
-    flex: 2
-  },
-  title: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  description: {
-    paddingTop: 4,
-  },
-});
-
-// The screen rendering everything
-const HomeScreen = () => (
-  <ScrollView>
-    <Heading>Trending Woofs</Heading>
-    <ScrollView horizontal>
-      {data.woofs.map(woof => (
-        <WoofCard
-          key={woof.id}
-          name={woof.name}
-          avatar={woof.avatar}
-        />
-      ))}
-    </ScrollView>
-    <Heading>New Woof Posts</Heading>
-    <ScrollView>
-    {data.posts.map(woof => (
-        <WoofPost
-          key={woof.id}
-          title={woof.title}
-          description={woof.description}
-          image={woof.image}
-        />
-      ))}
-    </ScrollView>
-  </ScrollView>
-);
-
 const App = () => (
   <SafeAreaView style={{ flex: 1, backgroundColor: '#FAF9FA' }}>
     <HomeScreen />
@@ -137,93 +9,114 @@ const App = () => (
 
 export default App;
 
-// "Fake" API data to use in your app
+const HomeScreen = () => (
+  <View>
+    <Text style={homeStyles.heading}>My Favourite Recipes</Text>
+    <View style={homeStyles.body}>
+      <ScrollView>
+        {data.recipes.map(recipe => (
+          <RecipeCard
+            key={recipe.id}
+            recipeName={recipe.recipeName}
+            ingredients={recipe.ingredients}
+            image={'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=967&q=80'}
+          />
+        ))}
+      </ScrollView>
+      <ScrollView>
+        {data.recipes.map(recipe => (
+          <View key={recipe.id}>
+            {recipe.ingredients.map(ingredient => (
+              <Text>{ingredient}</Text>  
+            ))}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  </View>
+)
+
+const homeStyles = StyleSheet.create({
+  heading: {
+    fontSize: 32,
+    textAlign: 'center',
+    padding: 24,
+  },
+  body: {
+    height: '90%',
+  },
+})
+
+const RecipeCard = (props) => (
+  <View style={recipeCardStyles.layout} key={props.key}>
+    <Image 
+      style={recipeCardStyles.image} 
+      source={{
+        uri: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&h=64&q=80',
+      }}/>    
+      <View style={recipeCardStyles.content} >
+        <Text style={recipeCardStyles.title} >
+          {props.recipeName}
+        </Text>
+        {props.ingredients.map(ingredient => (
+          <Text style={recipeCardStyles.items}>{ingredient}</Text>  
+        ))}
+    </View>
+  </View>
+)
+
+const recipeCardStyles = StyleSheet.create({
+  layout: {
+    margin: 16,
+    flexDirection: 'row',
+  },
+  image: {
+    height: 100,
+    width: 100,
+    marginRight: 12,
+  },
+  content: {
+    fontSize: 16,
+    textTransform: 'capitalize',
+  },
+  title: {
+    fontWeight: 'bold'
+  },
+  items: {
+    textTransform: 'capitalize',
+  }
+})
+
 const data = {
-  woofs: [
-    {
-      id: 'woof-1', 
-      name: 'Rex', 
-      avatar: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=648&q=80',
-      caretaker: 'Victor Grabarczyk',
-      source: 'https://unsplash.com/photos/x5oPmHmY3kQ',
+  recipes: [
+    { id: 1,
+      recipeName: 'Carbonara',
+      ingredients: ['pasta', 'creme fraiche', 'cheese', 'pancetta']
     },
-    {
-      id: 'woof-2', 
-      name: 'Ball', 
-      avatar: 'https://images.unsplash.com/photo-1585584114963-503344a119b0?auto=format&fit=crop&h=64&q=80',
-      caretaker: 'Tatiana Rodriguez',
-      source: 'https://unsplash.com/photos/J40C1k6Fut0',
+    { id: 2,
+      recipeName: 'Bolognaise',
+      ingredients: ['pasta', 'tomatoes', 'cheese', 'onion']
     },
-    {
-      id: 'woof-3', 
-      name: 'Happy', 
-      avatar: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&h=64&q=80',
-      caretaker: 'Marliese Streefland',
-      source: 'https://unsplash.com/photos/2l0CWTpcChI',
+    { id: 3,
+      recipeName: 'Fajitas',
+      ingredients: ['peppers', 'onions', 'cheese', 'peppers']
     },
-    {
-      id: 'woof-4',
-      name: 'Fluffy',
-      avatar: 'https://images.unsplash.com/photo-1554956615-1ba6dc39921b?auto=format&fit=crop&h=64&q=80',
-      caretaker: 'Nick Fewings',
-      source: 'https://unsplash.com/photos/rMKXLAIa2OY',
+    { id: 4,
+      recipeName: 'Shepherd\'s Pie',
+      ingredients: ['potato', 'tomato', 'cheese', 'lamb']
     },
-    {
-      id: 'woof-5',
-      name: 'Spirit',
-      avatar: 'https://images.unsplash.com/photo-1514984879728-be0aff75a6e8?auto=format&fit=crop&h=64&q=80',
-      caretaker: 'Jamie Street',
-      source: 'https://unsplash.com/photos/uNNCs5kL70Q',
+    { id: 5,
+      recipeName: 'Risotto',
+      ingredients: ['rice', 'peas', 'creme fraiche', 'onions']
     },
-  ],
-  posts: [
-    {
-      id: 'post-1',
-      image: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=967&q=80',
-      title: 'Happy Woofs',
-      description: 'How to keep your woof health and happy. We\'ve asked some of the best experts out there.',
-      caretaker: 'Jamie Street',
-      source: 'https://unsplash.com/photos/UtrE5DcgEyg',
+    { id: 6,
+      recipeName: 'Curry',
+      ingredients: ['chicken', 'curry powder', 'creme fraiche', 'rice']
     },
-    {
-      id: 'post-2',
-      image: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=850&q=80',
-      title: 'Woofs & friends',
-      description: 'Best friends are important for humans, but also for dogs.',
-      caretaker: 'Krista Mangulsone',
-      source: 'https://unsplash.com/photos/9gz3wfHr65U',
+    { id: 7,
+      recipeName: 'Stir fry',
+      ingredients: ['noodles', 'peppers', 'hoisin sauce', 'onions']
     },
-    {
-      id: 'post-3',
-      image: 'https://images.unsplash.com/photo-1558947530-cbcf6e9aeeae?auto=format&fit=crop&w=634&q=80',
-      title: 'Good Woofs',
-      description: 'A good woof is a woof that brings joy. Here are a few tips to let your woof behave.',
-      caretaker: 'Olia Nayda',
-      source: 'https://unsplash.com/photos/f6v_Q0WXEK8',
-    },
-    {
-      id: 'post-4',
-      image: 'https://images.unsplash.com/photo-1444212477490-ca407925329e?auto=format&fit=crop&w=1100&q=80',
-      title: 'Wild Woofs',
-      description: 'In some parts of the world, wild woofs are very common. Learn how to interact in a nice way.',
-      caretaker: 'Anoir Chafik',
-      source: 'https://unsplash.com/photos/2_3c4dIFYFU',
-    },
-    {
-      id: 'post-5',
-      image: 'https://images.unsplash.com/photo-1567014543648-e4391c989aab?auto=format&fit=crop&w=1050&q=80',
-      title: 'Sleepy Woofs',
-      description: 'Sleeping is just as important for woofs as it is for humans. What are the main things your woof dreams about.',
-      caretaker: 'Max Singh',
-      source: 'https://unsplash.com/photos/2637Pic9xMw',
-    },
-    {
-      id: 'post-6',
-      image: 'https://images.unsplash.com/photo-1524511751214-b0a384dd9afe?auto=format&fit=crop&w=967&q=80',
-      title: 'Exploring Woofs',
-      description: 'Just sitting in one place is boring for most woofs. How do woofs explore the world?',
-      caretaker: 'Jamie Street',
-      source: 'https://unsplash.com/photos/wcO2PWLuQ3U',
-    },
-  ],
-};
+
+  ]
+}
