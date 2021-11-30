@@ -1,18 +1,37 @@
 import * as React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
+
+const BottomNavigator = () => (
+  <Tab.Navigator>
+    <Tab.Screen
+      name="Recipes"
+      component={RecipeScreen}
+    />
+    <Tab.Screen
+      name="Ingredients"
+      component={IngredientsScreen}
+    />
+  </Tab.Navigator>
+)
 
 const App = () => (
-  <SafeAreaView style={{ flex: 1, backgroundColor: '#FAF9FA' }}>
-    <HomeScreen />
-  </SafeAreaView>
+  <NavigationContainer>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FAF9FA' }}>
+      <BottomNavigator />
+    </SafeAreaView>
+  </NavigationContainer>
 );
 
 export default App;
 
-const HomeScreen = () => (
+const RecipeScreen = () => (
   <View>
-    <Text style={homeStyles.heading}>My Favourite Recipes</Text>
-    <View style={homeStyles.body}>
+    <Text style={recipeStyles.heading}>My Favourite Recipes</Text>
+    <View style={recipeStyles.body}>
       <ScrollView>
         {data.recipes.map(recipe => (
           <RecipeCard
@@ -23,6 +42,13 @@ const HomeScreen = () => (
           />
         ))}
       </ScrollView>
+    </View>
+  </View>
+)
+const IngredientsScreen = () => (
+  <View>
+    <Text style={recipeStyles.heading}>My Ingredients</Text>
+    <View style={recipeStyles.body}>
       <ScrollView>
         {data.recipes.map(recipe => (
           <View key={recipe.id}>
@@ -36,7 +62,7 @@ const HomeScreen = () => (
   </View>
 )
 
-const homeStyles = StyleSheet.create({
+const recipeStyles = StyleSheet.create({
   heading: {
     fontSize: 32,
     textAlign: 'center',
